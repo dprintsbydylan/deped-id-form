@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DepEd ID Order Form</title>
+  <title>DepEd ID Order Form — DPrints by Dylan</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -13,9 +13,8 @@
     <!-- Header -->
     <header class="site-header">
       <div class="header-inner">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/DepEd.svg/200px-DepEd.svg.png" alt="DepEd Logo" class="logo" />
         <div class="header-text">
-          <p class="header-agency">Department of Education</p>
+          <p class="header-agency">DPrints by Dylan</p>
           <h1 class="header-title">DepEd ID Order Form</h1>
         </div>
       </div>
@@ -67,22 +66,56 @@
 
           <div class="form-row two-col">
             <div class="form-group">
-              <label for="dateOfBirth">Date of Birth <span class="required-star">*</span></label>
-              <input type="date" id="dateOfBirth" name="dateOfBirth" />
-              <span class="field-error" id="err-dateOfBirth"></span>
+              <label for="address">Address <span class="required-star">*</span></label>
+              <input type="text" id="address" name="address" placeholder="e.g. 123 Rizal St., Manila" autocomplete="street-address" />
+              <span class="field-error" id="err-address"></span>
             </div>
             <div class="form-group">
-              <label for="contactNumber">Contact Number <span class="required-star">*</span></label>
+              <label for="contactNumber">Contact No. <span class="required-star">*</span></label>
               <input type="tel" id="contactNumber" name="contactNumber" placeholder="e.g. 09171234567" maxlength="11" autocomplete="tel" />
               <span class="field-error" id="err-contactNumber"></span>
             </div>
           </div>
 
-          <div class="form-row one-col">
+          <div class="form-row three-col">
             <div class="form-group">
-              <label for="email">Email Address <span class="required-star">*</span></label>
-              <input type="email" id="email" name="email" placeholder="e.g. juan.delacruz@deped.gov.ph" autocomplete="email" />
-              <span class="field-error" id="err-email"></span>
+              <label for="dateOfBirth">Date of Birth <span class="required-star">*</span></label>
+              <input type="date" id="dateOfBirth" name="dateOfBirth" />
+              <span class="field-error" id="err-dateOfBirth"></span>
+            </div>
+            <div class="form-group">
+              <label for="bloodType">Blood Type <span class="required-star">*</span></label>
+              <select id="bloodType" name="bloodType">
+                <option value="">— Select —</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+              <span class="field-error" id="err-bloodType"></span>
+            </div>
+            <div class="form-group">
+              <label for="tin">TIN</label>
+              <input type="text" id="tin" name="tin" placeholder="e.g. 123-456-789" />
+            </div>
+          </div>
+
+          <div class="form-row three-col">
+            <div class="form-group">
+              <label for="gsisBpNo">GSIS BP No.</label>
+              <input type="text" id="gsisBpNo" name="gsisBpNo" placeholder="GSIS BP Number" />
+            </div>
+            <div class="form-group">
+              <label for="pagibigNo">Pag-IBIG No.</label>
+              <input type="text" id="pagibigNo" name="pagibigNo" placeholder="Pag-IBIG Number" />
+            </div>
+            <div class="form-group">
+              <label for="philhealthNo">PhilHealth No.</label>
+              <input type="text" id="philhealthNo" name="philhealthNo" placeholder="PhilHealth Number" />
             </div>
           </div>
 
@@ -94,12 +127,12 @@
 
           <div class="form-row two-col">
             <div class="form-group">
-              <label for="employeeId">Employee / School ID Number <span class="required-star">*</span></label>
+              <label for="employeeId">Employee Number <span class="required-star">*</span></label>
               <input type="text" id="employeeId" name="employeeId" placeholder="e.g. 123456789" />
               <span class="field-error" id="err-employeeId"></span>
             </div>
             <div class="form-group">
-              <label for="position">Position / Designation <span class="required-star">*</span></label>
+              <label for="position">Position <span class="required-star">*</span></label>
               <input type="text" id="position" name="position" placeholder="e.g. Teacher I" />
               <span class="field-error" id="err-position"></span>
             </div>
@@ -107,18 +140,23 @@
 
           <div class="form-row two-col">
             <div class="form-group">
-              <label for="schoolName">School Name <span class="required-star">*</span></label>
+              <label for="schoolName">Name of School <span class="required-star">*</span></label>
               <input type="text" id="schoolName" name="schoolName" placeholder="e.g. Rizal Elementary School" />
               <span class="field-error" id="err-schoolName"></span>
             </div>
             <div class="form-group">
-              <label for="division">Division / District <span class="required-star">*</span></label>
-              <input type="text" id="division" name="division" placeholder="e.g. Division of Manila" />
-              <span class="field-error" id="err-division"></span>
+              <label for="schoolAddress">School Address <span class="required-star">*</span></label>
+              <input type="text" id="schoolAddress" name="schoolAddress" placeholder="e.g. 123 Rizal St., Manila" />
+              <span class="field-error" id="err-schoolAddress"></span>
             </div>
           </div>
 
-          <div class="form-row one-col">
+          <div class="form-row two-col">
+            <div class="form-group">
+              <label for="division">Schools Division of <span class="required-star">*</span></label>
+              <input type="text" id="division" name="division" placeholder="e.g. Division of Manila" />
+              <span class="field-error" id="err-division"></span>
+            </div>
             <div class="form-group">
               <label for="region">Region <span class="required-star">*</span></label>
               <select id="region" name="region">
@@ -147,9 +185,55 @@
 
         </fieldset>
 
-        <!-- Section: File Uploads -->
+        <!-- Section: School Head Information -->
         <fieldset class="form-section">
-          <legend>Photo &amp; Documents</legend>
+          <legend>School Head Information</legend>
+
+          <div class="form-row two-col">
+            <div class="form-group">
+              <label for="schoolHeadName">Name of School Head <span class="required-star">*</span></label>
+              <input type="text" id="schoolHeadName" name="schoolHeadName" placeholder="e.g. Maria Santos" />
+              <span class="field-error" id="err-schoolHeadName"></span>
+            </div>
+            <div class="form-group">
+              <label for="schoolHeadPosition">Position <span class="required-star">*</span></label>
+              <input type="text" id="schoolHeadPosition" name="schoolHeadPosition" placeholder="e.g. Principal I" />
+              <span class="field-error" id="err-schoolHeadPosition"></span>
+            </div>
+          </div>
+
+        </fieldset>
+
+        <!-- Section: Emergency Contact -->
+        <fieldset class="form-section">
+          <legend>In Case of Emergency, Please Contact</legend>
+
+          <div class="form-row one-col">
+            <div class="form-group">
+              <label for="emergencyName">Name <span class="required-star">*</span></label>
+              <input type="text" id="emergencyName" name="emergencyName" placeholder="e.g. Maria Dela Cruz" />
+              <span class="field-error" id="err-emergencyName"></span>
+            </div>
+          </div>
+
+          <div class="form-row two-col">
+            <div class="form-group">
+              <label for="emergencyAddress">Address <span class="required-star">*</span></label>
+              <input type="text" id="emergencyAddress" name="emergencyAddress" placeholder="e.g. 456 Mabini St., Manila" />
+              <span class="field-error" id="err-emergencyAddress"></span>
+            </div>
+            <div class="form-group">
+              <label for="emergencyContact">Contact Number <span class="required-star">*</span></label>
+              <input type="tel" id="emergencyContact" name="emergencyContact" placeholder="e.g. 09181234567" maxlength="11" />
+              <span class="field-error" id="err-emergencyContact"></span>
+            </div>
+          </div>
+
+        </fieldset>
+
+        <!-- Section: Photo & E-Signature Upload -->
+        <fieldset class="form-section">
+          <legend>Photo &amp; E-Signature</legend>
 
           <!-- ID Photo -->
           <div class="form-group upload-group">
@@ -170,9 +254,28 @@
             <span class="field-error" id="err-idPhoto"></span>
           </div>
 
-          <!-- Supporting Doc 1 -->
+          <!-- E-Signature -->
           <div class="form-group upload-group">
-            <label for="supportingDoc1">Supporting Document 1 <span class="optional-tag">(Optional)</span></label>
+            <label for="esignature">E-Signature <span class="required-star">*</span></label>
+            <p class="field-hint">Upload your signature on a white background. Accepted formats: JPG, PNG. Max size: 5MB.</p>
+            <div class="upload-area" id="upload-area-esig">
+              <input type="file" id="esignature" name="esignature" accept=".jpg,.jpeg,.png" class="file-input" />
+              <label for="esignature" class="upload-label">
+                <span class="upload-icon">✍️</span>
+                <span class="upload-text">Click to upload e-signature</span>
+                <span class="upload-sub">JPG or PNG, max 5MB</span>
+              </label>
+            </div>
+            <div id="esig-preview-wrap" class="photo-preview-wrap hidden">
+              <img id="esig-preview" class="photo-preview esig-preview" src="" alt="E-Signature Preview" />
+              <button type="button" class="remove-file-btn" onclick="removeFile('esignature', 'esig-preview-wrap', 'upload-area-esig')">✕ Remove</button>
+            </div>
+            <span class="field-error" id="err-esignature"></span>
+          </div>
+
+          <!-- Supporting Document -->
+          <div class="form-group upload-group">
+            <label for="supportingDoc1">Supporting Document <span class="optional-tag">(Optional)</span></label>
             <p class="field-hint">Accepted formats: JPG, PNG, PDF. Max size: 5MB.</p>
             <div class="upload-area" id="upload-area-doc1">
               <input type="file" id="supportingDoc1" name="supportingDoc1" accept=".jpg,.jpeg,.png,.pdf" class="file-input" />
@@ -188,26 +291,6 @@
               <button type="button" class="remove-file-btn" onclick="removeFile('supportingDoc1', 'doc1-name-wrap', 'upload-area-doc1')">✕ Remove</button>
             </div>
             <span class="field-error" id="err-supportingDoc1"></span>
-          </div>
-
-          <!-- Supporting Doc 2 -->
-          <div class="form-group upload-group">
-            <label for="supportingDoc2">Supporting Document 2 <span class="optional-tag">(Optional)</span></label>
-            <p class="field-hint">Accepted formats: JPG, PNG, PDF. Max size: 5MB.</p>
-            <div class="upload-area" id="upload-area-doc2">
-              <input type="file" id="supportingDoc2" name="supportingDoc2" accept=".jpg,.jpeg,.png,.pdf" class="file-input" />
-              <label for="supportingDoc2" class="upload-label">
-                <span class="upload-icon">📄</span>
-                <span class="upload-text">Click to upload document</span>
-                <span class="upload-sub">JPG, PNG, or PDF, max 5MB</span>
-              </label>
-            </div>
-            <div id="doc2-name-wrap" class="file-name-wrap hidden">
-              <span class="file-icon">📎</span>
-              <span id="doc2-name" class="file-name"></span>
-              <button type="button" class="remove-file-btn" onclick="removeFile('supportingDoc2', 'doc2-name-wrap', 'upload-area-doc2')">✕ Remove</button>
-            </div>
-            <span class="field-error" id="err-supportingDoc2"></span>
           </div>
 
         </fieldset>
@@ -226,7 +309,7 @@
     </main>
 
     <footer class="site-footer">
-      <p>Department of Education &copy; 2026. For concerns, contact your Division Office.</p>
+      <p>DPrints by Dylan &copy; 2026. For concerns, contact your Division Office.</p>
     </footer>
 
   </div>

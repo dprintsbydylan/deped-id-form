@@ -271,6 +271,13 @@ select.valid {
   border: 1px solid #c5cdd8;
 }
 
+.esig-preview {
+  width: 160px;
+  height: 60px;
+  object-fit: contain;
+  background: #fff;
+}
+
 /* --- File Name Display --- */
 .file-name-wrap {
   display: flex;

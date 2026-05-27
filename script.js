@@ -1,10 +1,11 @@
 /* ============================================================
    DepEd ID Order Form — script.js
+   DPrints by Dylan
    ============================================================ */
 
 // ── Configuration ────────────────────────────────────────────
 // Replace this with your deployed Google Apps Script Web App URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzJ4Oxz6LvqHP9r5_qsZC01B0s_0-WAfRkoy3Afbo2jJv3OasMSFx24wvJ4jHyuig/exec';
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
 
 // ── File validation rules ────────────────────────────────────
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
@@ -22,23 +23,23 @@ const refNumberEl   = document.getElementById('reference-number');
 
 // ── File input listeners ─────────────────────────────────────
 document.getElementById('idPhoto').addEventListener('change', function () {
-  handlePhotoChange(this);
+  handleImageChange(this, 'photo-preview', 'photo-preview-wrap', 'upload-area-photo', 'err-idPhoto');
+});
+
+document.getElementById('esignature').addEventListener('change', function () {
+  handleImageChange(this, 'esig-preview', 'esig-preview-wrap', 'upload-area-esig', 'err-esignature');
 });
 
 document.getElementById('supportingDoc1').addEventListener('change', function () {
   handleDocChange(this, 'doc1-name', 'doc1-name-wrap', 'upload-area-doc1', 'err-supportingDoc1', ALLOWED_DOC_TYPES);
 });
 
-document.getElementById('supportingDoc2').addEventListener('change', function () {
-  handleDocChange(this, 'doc2-name', 'doc2-name-wrap', 'upload-area-doc2', 'err-supportingDoc2', ALLOWED_DOC_TYPES);
-});
-
-// ── Handle ID photo selection ────────────────────────────────
-function handlePhotoChange(input) {
-  const errorEl   = document.getElementById('err-idPhoto');
-  const previewWrap = document.getElementById('photo-preview-wrap');
-  const previewImg  = document.getElementById('photo-preview');
-  const uploadArea  = document.getElementById('upload-area-photo');
+// ── Handle image file selection (photo / e-signature) ────────
+function handleImageChange(input, previewImgId, previewWrapId, uploadAreaId, errorElId) {
+  const errorEl     = document.getElementById(errorElId);
+  const previewWrap = document.getElementById(previewWrapId);
+  const previewImg  = document.getElementById(previewImgId);
+  const uploadArea  = document.getElementById(uploadAreaId);
 
   clearError(errorEl);
 
@@ -53,7 +54,6 @@ function handlePhotoChange(input) {
     return;
   }
 
-  // Show preview
   const reader = new FileReader();
   reader.onload = function (e) {
     previewImg.src = e.target.result;
@@ -98,14 +98,12 @@ function removeFile(inputId, wrapId, uploadAreaId) {
   wrap.classList.add('hidden');
   uploadArea.classList.remove('hidden');
 
-  // Clear any lingering error
   const errorEl = document.getElementById('err-' + inputId);
   if (errorEl) clearError(errorEl);
 
-  // Clear photo preview src
-  if (inputId === 'idPhoto') {
-    document.getElementById('photo-preview').src = '';
-  }
+  // Clear image preview src
+  if (inputId === 'idPhoto')    document.getElementById('photo-preview').src = '';
+  if (inputId === 'esignature') document.getElementById('esig-preview').src  = '';
 }
 
 // ── File validation helper ───────────────────────────────────
@@ -120,25 +118,32 @@ function validateFile(file, allowedTypes) {
   return null;
 }
 
+// ── Required fields list ─────────────────────────────────────
+const REQUIRED_FIELDS = [
+  { id: 'lastName',            label: 'Last Name' },
+  { id: 'firstName',           label: 'First Name' },
+  { id: 'address',             label: 'Address' },
+  { id: 'contactNumber',       label: 'Contact No.' },
+  { id: 'dateOfBirth',         label: 'Date of Birth' },
+  { id: 'bloodType',           label: 'Blood Type' },
+  { id: 'employeeId',          label: 'Employee Number' },
+  { id: 'position',            label: 'Position' },
+  { id: 'schoolName',          label: 'Name of School' },
+  { id: 'schoolAddress',       label: 'School Address' },
+  { id: 'division',            label: 'Schools Division of' },
+  { id: 'region',              label: 'Region' },
+  { id: 'schoolHeadName',      label: 'Name of School Head' },
+  { id: 'schoolHeadPosition',  label: 'School Head Position' },
+  { id: 'emergencyName',       label: 'Emergency Contact Name' },
+  { id: 'emergencyAddress',    label: 'Emergency Contact Address' },
+  { id: 'emergencyContact',    label: 'Emergency Contact Number' },
+];
+
 // ── Form validation ──────────────────────────────────────────
 function validateForm() {
   let isValid = true;
 
-  // Text / select fields
-  const requiredFields = [
-    { id: 'lastName',      label: 'Last Name' },
-    { id: 'firstName',     label: 'First Name' },
-    { id: 'dateOfBirth',   label: 'Date of Birth' },
-    { id: 'contactNumber', label: 'Contact Number' },
-    { id: 'email',         label: 'Email Address' },
-    { id: 'employeeId',    label: 'Employee / School ID Number' },
-    { id: 'position',      label: 'Position / Designation' },
-    { id: 'schoolName',    label: 'School Name' },
-    { id: 'division',      label: 'Division / District' },
-    { id: 'region',        label: 'Region' },
-  ];
-
-  requiredFields.forEach(({ id, label }) => {
+  REQUIRED_FIELDS.forEach(({ id, label }) => {
     const el      = document.getElementById(id);
     const errorEl = document.getElementById('err-' + id);
     const value   = el.value.trim();
@@ -154,29 +159,41 @@ function validateForm() {
     }
   });
 
-  // Email format
-  const emailEl    = document.getElementById('email');
-  const emailError = document.getElementById('err-email');
-  if (emailEl.value.trim() && !isValidEmail(emailEl.value.trim())) {
-    showError(emailError, 'Please enter a valid email address.');
+  // Email format (optional field — only validate if filled)
+  const emailEl = document.getElementById('email');
+  if (emailEl && emailEl.value.trim() && !isValidEmail(emailEl.value.trim())) {
+    showError(document.getElementById('err-email'), 'Please enter a valid email address.');
     emailEl.classList.add('invalid');
     isValid = false;
   }
 
-  // Contact number — must be 11 digits
-  const contactEl    = document.getElementById('contactNumber');
-  const contactError = document.getElementById('err-contactNumber');
+  // Contact number — 11 digits
+  const contactEl = document.getElementById('contactNumber');
   if (contactEl.value.trim() && !/^\d{11}$/.test(contactEl.value.trim())) {
-    showError(contactError, 'Contact number must be exactly 11 digits.');
+    showError(document.getElementById('err-contactNumber'), 'Contact number must be exactly 11 digits.');
     contactEl.classList.add('invalid');
+    isValid = false;
+  }
+
+  // Emergency contact number — 11 digits
+  const emergencyContactEl = document.getElementById('emergencyContact');
+  if (emergencyContactEl.value.trim() && !/^\d{11}$/.test(emergencyContactEl.value.trim())) {
+    showError(document.getElementById('err-emergencyContact'), 'Contact number must be exactly 11 digits.');
+    emergencyContactEl.classList.add('invalid');
     isValid = false;
   }
 
   // ID photo — required
   const idPhotoInput = document.getElementById('idPhoto');
-  const idPhotoError = document.getElementById('err-idPhoto');
   if (!idPhotoInput.files || idPhotoInput.files.length === 0) {
-    showError(idPhotoError, 'ID photo is required.');
+    showError(document.getElementById('err-idPhoto'), 'ID photo is required.');
+    isValid = false;
+  }
+
+  // E-signature — required
+  const esigInput = document.getElementById('esignature');
+  if (!esigInput.files || esigInput.files.length === 0) {
+    showError(document.getElementById('err-esignature'), 'E-Signature is required.');
     isValid = false;
   }
 
@@ -184,28 +201,23 @@ function validateForm() {
 }
 
 // ── Live validation on blur ──────────────────────────────────
-['lastName','firstName','dateOfBirth','contactNumber','email',
- 'employeeId','position','schoolName','division','region'].forEach(id => {
+REQUIRED_FIELDS.forEach(({ id }) => {
   const el = document.getElementById(id);
   if (!el) return;
 
   el.addEventListener('blur', () => {
     const errorEl = document.getElementById('err-' + id);
-    if (!el.value.trim()) {
-      // Only show error if user has interacted
-      return;
-    }
+    if (!el.value.trim()) return;
     clearError(errorEl);
     el.classList.remove('invalid');
     el.classList.add('valid');
 
-    // Extra format checks on blur
-    if (id === 'email' && !isValidEmail(el.value.trim())) {
-      showError(errorEl, 'Please enter a valid email address.');
+    if (id === 'contactNumber' && !/^\d{11}$/.test(el.value.trim())) {
+      showError(errorEl, 'Contact number must be exactly 11 digits.');
       el.classList.add('invalid');
       el.classList.remove('valid');
     }
-    if (id === 'contactNumber' && !/^\d{11}$/.test(el.value.trim())) {
+    if (id === 'emergencyContact' && !/^\d{11}$/.test(el.value.trim())) {
       showError(errorEl, 'Contact number must be exactly 11 digits.');
       el.classList.add('invalid');
       el.classList.remove('valid');
@@ -226,7 +238,6 @@ function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload  = () => {
-      // result is "data:mime/type;base64,XXXX" — strip the prefix
       const base64 = reader.result.split(',')[1];
       resolve(base64);
     };
@@ -235,34 +246,35 @@ function fileToBase64(file) {
   });
 }
 
-// ── Build payload for Apps Script ───────────────────────────
-// Apps Script doPost() reads e.parameter (strings) and does not
-// natively parse multipart/form-data file blobs, so we encode
-// files as base64 strings and send everything as URLSearchParams.
+// ── Build payload for Apps Script ────────────────────────────
 async function buildPayload() {
-  const fields = [
-    'lastName','firstName','middleName','dateOfBirth',
-    'employeeId','position','schoolName','division','region',
-    'contactNumber','email',
+  const textFields = [
+    'lastName', 'firstName', 'middleName',
+    'address', 'contactNumber', 'dateOfBirth', 'bloodType',
+    'tin', 'gsisBpNo', 'pagibigNo', 'philhealthNo',
+    'employeeId', 'position', 'schoolName', 'schoolAddress',
+    'division', 'region',
+    'schoolHeadName', 'schoolHeadPosition',
+    'emergencyName', 'emergencyAddress', 'emergencyContact',
   ];
 
   const params = new URLSearchParams();
 
-  fields.forEach(id => {
+  textFields.forEach(id => {
     const el = document.getElementById(id);
     if (el) params.append(id, el.value.trim());
   });
 
-  // Encode each file
+  // Encode file fields
   const fileFields = [
     { id: 'idPhoto',        name: 'idPhoto' },
+    { id: 'esignature',     name: 'esignature' },
     { id: 'supportingDoc1', name: 'supportingDoc1' },
-    { id: 'supportingDoc2', name: 'supportingDoc2' },
   ];
 
   for (const { id, name } of fileFields) {
     const input = document.getElementById(id);
-    if (input.files && input.files[0]) {
+    if (input && input.files && input.files[0]) {
       const file   = input.files[0];
       const base64 = await fileToBase64(file);
       params.append(name,                  base64);
@@ -277,11 +289,9 @@ async function buildPayload() {
 // ── Form submit ──────────────────────────────────────────────
 form.addEventListener('submit', async function (e) {
   e.preventDefault();
-
   hideElement(submitError);
 
   if (!validateForm()) {
-    // Scroll to first error
     const firstError = form.querySelector('.invalid, .field-error:not(:empty)');
     if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
@@ -316,22 +326,20 @@ form.addEventListener('submit', async function (e) {
   }
 });
 
-// ── Reset form (Submit Another Order) ────────────────────────
+// ── Reset form ───────────────────────────────────────────────
 function resetForm() {
   form.reset();
   form.classList.remove('hidden');
   successScreen.classList.add('hidden');
 
-  // Clear all errors and valid states
   form.querySelectorAll('.field-error').forEach(el => el.textContent = '');
   form.querySelectorAll('input, select').forEach(el => {
     el.classList.remove('valid', 'invalid');
   });
 
-  // Reset file previews
-  removeFile('idPhoto', 'photo-preview-wrap', 'upload-area-photo');
-  removeFile('supportingDoc1', 'doc1-name-wrap', 'upload-area-doc1');
-  removeFile('supportingDoc2', 'doc2-name-wrap', 'upload-area-doc2');
+  removeFile('idPhoto',        'photo-preview-wrap', 'upload-area-photo');
+  removeFile('esignature',     'esig-preview-wrap',  'upload-area-esig');
+  removeFile('supportingDoc1', 'doc1-name-wrap',     'upload-area-doc1');
 
   hideElement(submitError);
   window.scrollTo({ top: 0, behavior: 'smooth' });
