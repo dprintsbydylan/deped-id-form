@@ -260,47 +260,14 @@ function generateReferenceNumber() {
   return `DEPEDID-${year}${month}${day}-${rand}`;
 }
 
-// ── Build URL-encoded payload with base64 files ──────────────
-async function buildPayload(referenceNumber) {
-  const params = new URLSearchParams();
-
-  const textFields = [
-    'lastName','firstName','middleName','dateOfBirth','bloodType',
-    'address','contactNo','position','employeeNumber','nameOfSchool',
-    'schoolAddress','region','schoolsDivisionOf','tin','gsisBpNo',
-    'pagIbigNo','philHealthNo','emergencyContactName',
-    'emergencyContactAddress','emergencyContactNumber',
-    'nameOfSchoolHead','schoolHeadPosition',
-  ];
-
-  textFields.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) params.append(id, el.value.trim());
-  });
-
-  params.append('referenceNumber', referenceNumber);
-  params.append('timestamp', new Date().toISOString());
-
-  // Encode files as base64
-  const fileFields = [
-    { id: 'idPhoto',        name: 'idPhoto' },
-    { id: 'eSignature',     name: 'eSignature' },
-    { id: 'supportingDoc1', name: 'supportingDoc1' },
-    { id: 'supportingDoc2', name: 'supportingDoc2' },
-  ];
-
-  for (const { id, name } of fileFields) {
-    const input = document.getElementById(id);
-    if (input && input.files && input.files[0]) {
-      const file   = input.files[0];
-      const base64 = await fileToBase64(file);
-      params.append(name,                  base64);
-      params.append(name + '_filename',    file.name);
-      params.append(name + '_mimetype',    file.type);
-    }
-  }
-
-  return params;
+// ── Send a single POST (no-cors, url-encoded) ─────────────────
+function postData(params) {
+  return fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(params).toString(),
+    mode: 'no-cors',
+  }).catch(() => {});
 }
 
 // ── Form submit ──────────────────────────────────────────────
@@ -318,19 +285,62 @@ form.addEventListener('submit', async function (e) {
 
   try {
     const referenceNumber = generateReferenceNumber();
-    const payload         = await buildPayload(referenceNumber);
+    const timestamp       = new Date().toISOString();
 
-    // Fire and forget — Apps Script saves the data silently.
-    // We don't await the response because CORS blocks reading it
-    // from GitHub Pages, but the POST goes through successfully.
-    fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: payload.toString(),
-      mode: 'no-cors',
-    }).catch(() => {});
+    // ── Step 1: Send all text fields ──────────────────────────
+    await postData({
+      action:                  'saveRow',
+      referenceNumber,
+      timestamp,
+      lastName:                document.getElementById('lastName').value.trim(),
+      firstName:               document.getElementById('firstName').value.trim(),
+      middleName:              document.getElementById('middleName').value.trim(),
+      dateOfBirth:             document.getElementById('dateOfBirth').value.trim(),
+      bloodType:               document.getElementById('bloodType').value.trim(),
+      address:                 document.getElementById('address').value.trim(),
+      contactNo:               document.getElementById('contactNo').value.trim(),
+      position:                document.getElementById('position').value.trim(),
+      employeeNumber:          document.getElementById('employeeNumber').value.trim(),
+      nameOfSchool:            document.getElementById('nameOfSchool').value.trim(),
+      schoolAddress:           document.getElementById('schoolAddress').value.trim(),
+      region:                  document.getElementById('region').value.trim(),
+      schoolsDivisionOf:       document.getElementById('schoolsDivisionOf').value.trim(),
+      tin:                     document.getElementById('tin').value.trim(),
+      gsisBpNo:                document.getElementById('gsisBpNo').value.trim(),
+      pagIbigNo:               document.getElementById('pagIbigNo').value.trim(),
+      philHealthNo:            document.getElementById('philHealthNo').value.trim(),
+      emergencyContactName:    document.getElementById('emergencyContactName').value.trim(),
+      emergencyContactAddress: document.getElementById('emergencyContactAddress').value.trim(),
+      emergencyContactNumber:  document.getElementById('emergencyContactNumber').value.trim(),
+      nameOfSchoolHead:        document.getElementById('nameOfSchoolHead').value.trim(),
+      schoolHeadPosition:      document.getElementById('schoolHeadPosition').value.trim(),
+    });
 
-    // Show confirmation immediately using the client-generated ref number
+    // ── Step 2: Send each file individually ───────────────────
+    const fileFields = [
+      { id: 'idPhoto',        name: 'idPhoto' },
+      { id: 'eSignature',     name: 'eSignature' },
+      { id: 'supportingDoc1', name: 'supportingDoc1' },
+      { id: 'supportingDoc2', name: 'supportingDoc2' },
+    ];
+
+    for (const { id, name } of fileFields) {
+      const input = document.getElementById(id);
+      if (input && input.files && input.files[0]) {
+        const file   = input.files[0];
+        const base64 = await fileToBase64(file);
+        await postData({
+          action:         'saveFile',
+          referenceNumber,
+          fieldName:      name,
+          fileData:       base64,
+          fileName:       file.name,
+          fileMimeType:   file.type,
+        });
+      }
+    }
+
+    // ── Show confirmation ─────────────────────────────────────
     refNumberEl.textContent = referenceNumber;
     form.classList.add('hidden');
     successScreen.classList.remove('hidden');
