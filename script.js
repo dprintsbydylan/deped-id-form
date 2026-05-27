@@ -4,7 +4,7 @@
 
 // ── Configuration ────────────────────────────────────────────
 // Replace with your deployed Google Apps Script Web App URL
-const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzJ4Oxz6LvqHP9r5_qsZC01B0s_0-WAfRkoy3Afbo2jJv3OasMSFx24wvJ4jHyuig/exec';
 
 // ── File validation rules ────────────────────────────────────
 const MAX_FILE_SIZE_BYTES  = 5 * 1024 * 1024; // 5 MB
