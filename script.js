@@ -252,19 +252,18 @@ function fileToBase64(file) {
 
 // ── Generate reference number on client side ─────────────────
 function generateReferenceNumber() {
-  const now    = new Date();
-  const year   = now.getFullYear();
-  const month  = String(now.getMonth() + 1).padStart(2, '0');
-  const day    = String(now.getDate()).padStart(2, '0');
-  const rand   = String(Math.floor(Math.random() * 9000) + 1000); // 4-digit random
+  const now   = new Date();
+  const year  = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day   = String(now.getDate()).padStart(2, '0');
+  const rand  = String(Math.floor(Math.random() * 9000) + 1000);
   return `DEPEDID-${year}${month}${day}-${rand}`;
 }
 
-// ── Build FormData payload ───────────────────────────────────
-async function buildPayload() {
-  const formData = new FormData();
+// ── Build URL-encoded payload with base64 files ──────────────
+async function buildPayload(referenceNumber) {
+  const params = new URLSearchParams();
 
-  // All text / select fields
   const textFields = [
     'lastName','firstName','middleName','dateOfBirth','bloodType',
     'address','contactNo','position','employeeNumber','nameOfSchool',
@@ -276,10 +275,13 @@ async function buildPayload() {
 
   textFields.forEach(id => {
     const el = document.getElementById(id);
-    if (el) formData.append(id, el.value.trim());
+    if (el) params.append(id, el.value.trim());
   });
 
-  // File fields — append raw File objects
+  params.append('referenceNumber', referenceNumber);
+  params.append('timestamp', new Date().toISOString());
+
+  // Encode files as base64
   const fileFields = [
     { id: 'idPhoto',        name: 'idPhoto' },
     { id: 'eSignature',     name: 'eSignature' },
@@ -290,11 +292,15 @@ async function buildPayload() {
   for (const { id, name } of fileFields) {
     const input = document.getElementById(id);
     if (input && input.files && input.files[0]) {
-      formData.append(name, input.files[0]);
+      const file   = input.files[0];
+      const base64 = await fileToBase64(file);
+      params.append(name,                  base64);
+      params.append(name + '_filename',    file.name);
+      params.append(name + '_mimetype',    file.type);
     }
   }
 
-  return formData;
+  return params;
 }
 
 // ── Form submit ──────────────────────────────────────────────
@@ -312,24 +318,19 @@ form.addEventListener('submit', async function (e) {
 
   try {
     const referenceNumber = generateReferenceNumber();
-    const formData        = await buildPayload();
+    const payload         = await buildPayload(referenceNumber);
 
-    // Add reference number and timestamp to the payload
-    formData.append('referenceNumber', referenceNumber);
-    formData.append('timestamp', new Date().toISOString());
-
-    // Send to Apps Script using no-cors (Apps Script doesn't support CORS
-    // from external origins). We generate the reference number client-side
-    // and show confirmation immediately; Apps Script saves the row silently.
+    // Fire and forget — Apps Script saves the data silently.
+    // We don't await the response because CORS blocks reading it
+    // from GitHub Pages, but the POST goes through successfully.
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      body: formData,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: payload.toString(),
       mode: 'no-cors',
-    }).catch(() => {
-      // Silently ignore — no-cors fetch always resolves with opaque response
-    });
+    }).catch(() => {});
 
-    // Show confirmation immediately
+    // Show confirmation immediately using the client-generated ref number
     refNumberEl.textContent = referenceNumber;
     form.classList.add('hidden');
     successScreen.classList.remove('hidden');
