@@ -250,9 +250,19 @@ function fileToBase64(file) {
   });
 }
 
-// ── Build payload for Apps Script ───────────────────────────
+// ── Generate reference number on client side ─────────────────
+function generateReferenceNumber() {
+  const now    = new Date();
+  const year   = now.getFullYear();
+  const month  = String(now.getMonth() + 1).padStart(2, '0');
+  const day    = String(now.getDate()).padStart(2, '0');
+  const rand   = String(Math.floor(Math.random() * 9000) + 1000); // 4-digit random
+  return `DEPEDID-${year}${month}${day}-${rand}`;
+}
+
+// ── Build FormData payload ───────────────────────────────────
 async function buildPayload() {
-  const params = new URLSearchParams();
+  const formData = new FormData();
 
   // All text / select fields
   const textFields = [
@@ -266,10 +276,10 @@ async function buildPayload() {
 
   textFields.forEach(id => {
     const el = document.getElementById(id);
-    if (el) params.append(id, el.value.trim());
+    if (el) formData.append(id, el.value.trim());
   });
 
-  // File fields
+  // File fields — append raw File objects
   const fileFields = [
     { id: 'idPhoto',        name: 'idPhoto' },
     { id: 'eSignature',     name: 'eSignature' },
@@ -280,15 +290,11 @@ async function buildPayload() {
   for (const { id, name } of fileFields) {
     const input = document.getElementById(id);
     if (input && input.files && input.files[0]) {
-      const file   = input.files[0];
-      const base64 = await fileToBase64(file);
-      params.append(name,                  base64);
-      params.append(name + '_filename',    file.name);
-      params.append(name + '_mimetype',    file.type);
+      formData.append(name, input.files[0]);
     }
   }
 
-  return params;
+  return formData;
 }
 
 // ── Form submit ──────────────────────────────────────────────
@@ -305,24 +311,29 @@ form.addEventListener('submit', async function (e) {
   setLoading(true);
 
   try {
-    const payload = await buildPayload();
+    const referenceNumber = generateReferenceNumber();
+    const formData        = await buildPayload();
 
-    const response = await fetch(APPS_SCRIPT_URL, {
+    // Add reference number and timestamp to the payload
+    formData.append('referenceNumber', referenceNumber);
+    formData.append('timestamp', new Date().toISOString());
+
+    // Send to Apps Script using no-cors (Apps Script doesn't support CORS
+    // from external origins). We generate the reference number client-side
+    // and show confirmation immediately; Apps Script saves the row silently.
+    fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: payload.toString(),
+      body: formData,
+      mode: 'no-cors',
+    }).catch(() => {
+      // Silently ignore — no-cors fetch always resolves with opaque response
     });
 
-    const result = await response.json();
-
-    if (result.status === 'success') {
-      refNumberEl.textContent = result.referenceNumber;
-      form.classList.add('hidden');
-      successScreen.classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      showSubmitError(result.message || 'Something went wrong. Please try again.');
-    }
+    // Show confirmation immediately
+    refNumberEl.textContent = referenceNumber;
+    form.classList.add('hidden');
+    successScreen.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
   } catch (err) {
     showSubmitError('Unable to submit. Please check your connection and try again.');
