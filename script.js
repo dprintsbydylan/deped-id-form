@@ -120,6 +120,7 @@ function validateFile(file, allowedTypes) {
 
 // ── Required fields list ─────────────────────────────────────
 const REQUIRED_FIELDS = [
+  { id: 'lastName',   label: 'Last Name' },
   { id: 'firstName',  label: 'First Name' },
   { id: 'dateOfBirth', label: 'Date of Birth' },
   { id: 'employeeId', label: 'Employee Number' },
