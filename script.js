@@ -5,10 +5,10 @@
 
 // ── Configuration ────────────────────────────────────────────
 // Replace this with your deployed Google Apps Script Web App URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQeZRaQjOSZpikf6OOaLYc4YMYGVmkrUo8UaFFMigb1NNd8g1WHcN3_6Vdu4Lf65HmVQ/exec';
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
 
 // ── File validation rules ────────────────────────────────────
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png'];
 const ALLOWED_DOC_TYPES   = ['image/jpeg', 'image/png', 'application/pdf'];
 
@@ -113,30 +113,20 @@ function validateFile(file, allowedTypes) {
     return `Invalid file type. Allowed: ${labels}.`;
   }
   if (file.size > MAX_FILE_SIZE_BYTES) {
-    return 'File exceeds the 5MB size limit.';
+    return 'File exceeds the 10MB size limit.';
   }
   return null;
 }
 
 // ── Required fields list ─────────────────────────────────────
 const REQUIRED_FIELDS = [
-  { id: 'lastName',            label: 'Last Name' },
-  { id: 'firstName',           label: 'First Name' },
-  { id: 'address',             label: 'Address' },
-  { id: 'contactNumber',       label: 'Contact No.' },
-  { id: 'dateOfBirth',         label: 'Date of Birth' },
-  { id: 'bloodType',           label: 'Blood Type' },
-  { id: 'employeeId',          label: 'Employee Number' },
-  { id: 'position',            label: 'Position' },
-  { id: 'schoolName',          label: 'Name of School' },
-  { id: 'schoolAddress',       label: 'School Address' },
-  { id: 'division',            label: 'Schools Division of' },
-  { id: 'region',              label: 'Region' },
-  { id: 'schoolHeadName',      label: 'Name of School Head' },
-  { id: 'schoolHeadPosition',  label: 'School Head Position' },
-  { id: 'emergencyName',       label: 'Emergency Contact Name' },
-  { id: 'emergencyAddress',    label: 'Emergency Contact Address' },
-  { id: 'emergencyContact',    label: 'Emergency Contact Number' },
+  { id: 'firstName',  label: 'First Name' },
+  { id: 'dateOfBirth', label: 'Date of Birth' },
+  { id: 'employeeId', label: 'Employee Number' },
+  { id: 'position',   label: 'Position' },
+  { id: 'schoolName', label: 'Name of School' },
+  { id: 'division',   label: 'Schools Division of' },
+  { id: 'region',     label: 'Region' },
 ];
 
 // ── Form validation ──────────────────────────────────────────
@@ -167,7 +157,7 @@ function validateForm() {
     isValid = false;
   }
 
-  // Contact number — 11 digits
+  // Contact number — 11 digits (optional, validate only if filled)
   const contactEl = document.getElementById('contactNumber');
   if (contactEl.value.trim() && !/^\d{11}$/.test(contactEl.value.trim())) {
     showError(document.getElementById('err-contactNumber'), 'Contact number must be exactly 11 digits.');
@@ -175,25 +165,11 @@ function validateForm() {
     isValid = false;
   }
 
-  // Emergency contact number — 11 digits
+  // Emergency contact number — 11 digits (optional, validate only if filled)
   const emergencyContactEl = document.getElementById('emergencyContact');
   if (emergencyContactEl.value.trim() && !/^\d{11}$/.test(emergencyContactEl.value.trim())) {
     showError(document.getElementById('err-emergencyContact'), 'Contact number must be exactly 11 digits.');
     emergencyContactEl.classList.add('invalid');
-    isValid = false;
-  }
-
-  // ID photo — required
-  const idPhotoInput = document.getElementById('idPhoto');
-  if (!idPhotoInput.files || idPhotoInput.files.length === 0) {
-    showError(document.getElementById('err-idPhoto'), 'ID photo is required.');
-    isValid = false;
-  }
-
-  // E-signature — required
-  const esigInput = document.getElementById('esignature');
-  if (!esigInput.files || esigInput.files.length === 0) {
-    showError(document.getElementById('err-esignature'), 'E-Signature is required.');
     isValid = false;
   }
 

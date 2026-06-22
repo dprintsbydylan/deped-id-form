@@ -13,7 +13,6 @@
     <!-- Header -->
     <header class="site-header">
       <div class="header-inner">
-         <img src="1757407886766.png" alt="Logo" class="logo" />
         <div class="header-text">
           <p class="header-agency">DPrints by Dylan</p>
           <h1 class="header-title">DepEd ID Order Form</h1>
@@ -50,9 +49,8 @@
 
           <div class="form-row three-col">
             <div class="form-group">
-              <label for="lastName">Last Name <span class="required-star">*</span></label>
+              <label for="lastName">Last Name</label>
               <input type="text" id="lastName" name="lastName" placeholder="e.g. Dela Cruz" autocomplete="family-name" />
-              <span class="field-error" id="err-lastName"></span>
             </div>
             <div class="form-group">
               <label for="firstName">First Name <span class="required-star">*</span></label>
@@ -67,12 +65,11 @@
 
           <div class="form-row two-col">
             <div class="form-group">
-              <label for="address">Address <span class="required-star">*</span></label>
+              <label for="address">Address</label>
               <input type="text" id="address" name="address" placeholder="e.g. 123 Rizal St., Manila" autocomplete="street-address" />
-              <span class="field-error" id="err-address"></span>
             </div>
             <div class="form-group">
-              <label for="contactNumber">Contact No. <span class="required-star">*</span></label>
+              <label for="contactNumber">Contact No.</label>
               <input type="tel" id="contactNumber" name="contactNumber" placeholder="e.g. 09171234567" maxlength="11" autocomplete="tel" />
               <span class="field-error" id="err-contactNumber"></span>
             </div>
@@ -85,7 +82,7 @@
               <span class="field-error" id="err-dateOfBirth"></span>
             </div>
             <div class="form-group">
-              <label for="bloodType">Blood Type <span class="required-star">*</span></label>
+              <label for="bloodType">Blood Type</label>
               <select id="bloodType" name="bloodType">
                 <option value="">— Select —</option>
                 <option value="A+">A+</option>
@@ -97,7 +94,6 @@
                 <option value="O+">O+</option>
                 <option value="O-">O-</option>
               </select>
-              <span class="field-error" id="err-bloodType"></span>
             </div>
             <div class="form-group">
               <label for="tin">TIN</label>
@@ -146,9 +142,8 @@
               <span class="field-error" id="err-schoolName"></span>
             </div>
             <div class="form-group">
-              <label for="schoolAddress">School Address <span class="required-star">*</span></label>
+              <label for="schoolAddress">School Address</label>
               <input type="text" id="schoolAddress" name="schoolAddress" placeholder="e.g. 123 Rizal St., Manila" />
-              <span class="field-error" id="err-schoolAddress"></span>
             </div>
           </div>
 
@@ -192,14 +187,12 @@
 
           <div class="form-row two-col">
             <div class="form-group">
-              <label for="schoolHeadName">Name of School Head <span class="required-star">*</span></label>
+              <label for="schoolHeadName">Name of School Head</label>
               <input type="text" id="schoolHeadName" name="schoolHeadName" placeholder="e.g. Maria Santos" />
-              <span class="field-error" id="err-schoolHeadName"></span>
             </div>
             <div class="form-group">
-              <label for="schoolHeadPosition">Position <span class="required-star">*</span></label>
+              <label for="schoolHeadPosition">Position</label>
               <input type="text" id="schoolHeadPosition" name="schoolHeadPosition" placeholder="e.g. Principal I" />
-              <span class="field-error" id="err-schoolHeadPosition"></span>
             </div>
           </div>
 
@@ -211,20 +204,18 @@
 
           <div class="form-row one-col">
             <div class="form-group">
-              <label for="emergencyName">Name <span class="required-star">*</span></label>
+              <label for="emergencyName">Name</label>
               <input type="text" id="emergencyName" name="emergencyName" placeholder="e.g. Maria Dela Cruz" />
-              <span class="field-error" id="err-emergencyName"></span>
             </div>
           </div>
 
           <div class="form-row two-col">
             <div class="form-group">
-              <label for="emergencyAddress">Address <span class="required-star">*</span></label>
+              <label for="emergencyAddress">Address</label>
               <input type="text" id="emergencyAddress" name="emergencyAddress" placeholder="e.g. 456 Mabini St., Manila" />
-              <span class="field-error" id="err-emergencyAddress"></span>
             </div>
             <div class="form-group">
-              <label for="emergencyContact">Contact Number <span class="required-star">*</span></label>
+              <label for="emergencyContact">Contact Number</label>
               <input type="tel" id="emergencyContact" name="emergencyContact" placeholder="e.g. 09181234567" maxlength="11" />
               <span class="field-error" id="err-emergencyContact"></span>
             </div>
@@ -238,14 +229,14 @@
 
           <!-- ID Photo -->
           <div class="form-group upload-group">
-            <label for="idPhoto">ID Photo <span class="required-star">*</span></label>
-            <p class="field-hint">Upload a clear, recent photo. Accepted formats: JPG, PNG. Max size: 5MB.</p>
+            <label for="idPhoto">ID Photo <span class="optional-tag">(Optional)</span></label>
+            <p class="field-hint">Upload a clear, recent photo. Accepted formats: JPG, PNG. Max size: 10MB.</p>
             <div class="upload-area" id="upload-area-photo">
               <input type="file" id="idPhoto" name="idPhoto" accept=".jpg,.jpeg,.png" class="file-input" />
               <label for="idPhoto" class="upload-label">
                 <span class="upload-icon">📷</span>
                 <span class="upload-text">Click to upload ID photo</span>
-                <span class="upload-sub">JPG or PNG, max 5MB</span>
+                <span class="upload-sub">JPG or PNG, max 10MB</span>
               </label>
             </div>
             <div id="photo-preview-wrap" class="photo-preview-wrap hidden">
@@ -257,14 +248,14 @@
 
           <!-- E-Signature -->
           <div class="form-group upload-group">
-            <label for="esignature">E-Signature <span class="required-star">*</span></label>
-            <p class="field-hint">Upload your signature on a white background. Accepted formats: JPG, PNG. Max size: 5MB.</p>
+            <label for="esignature">E-Signature <span class="optional-tag">(Optional)</span></label>
+            <p class="field-hint">Upload your signature on a white background. Accepted formats: JPG, PNG. Max size: 10MB.</p>
             <div class="upload-area" id="upload-area-esig">
               <input type="file" id="esignature" name="esignature" accept=".jpg,.jpeg,.png" class="file-input" />
               <label for="esignature" class="upload-label">
                 <span class="upload-icon">✍️</span>
                 <span class="upload-text">Click to upload e-signature</span>
-                <span class="upload-sub">JPG or PNG, max 5MB</span>
+                <span class="upload-sub">JPG or PNG, max 10MB</span>
               </label>
             </div>
             <div id="esig-preview-wrap" class="photo-preview-wrap hidden">
@@ -277,13 +268,13 @@
           <!-- Supporting Document -->
           <div class="form-group upload-group">
             <label for="supportingDoc1">Supporting Document <span class="optional-tag">(Optional)</span></label>
-            <p class="field-hint">Accepted formats: JPG, PNG, PDF. Max size: 5MB.</p>
+            <p class="field-hint">Accepted formats: JPG, PNG, PDF. Max size: 10MB.</p>
             <div class="upload-area" id="upload-area-doc1">
               <input type="file" id="supportingDoc1" name="supportingDoc1" accept=".jpg,.jpeg,.png,.pdf" class="file-input" />
               <label for="supportingDoc1" class="upload-label">
                 <span class="upload-icon">📄</span>
                 <span class="upload-text">Click to upload document</span>
-                <span class="upload-sub">JPG, PNG, or PDF, max 5MB</span>
+                <span class="upload-sub">JPG, PNG, or PDF, max 10MB</span>
               </label>
             </div>
             <div id="doc1-name-wrap" class="file-name-wrap hidden">
@@ -310,7 +301,7 @@
     </main>
 
     <footer class="site-footer">
-      <p>DPrints by Dylan &copy; 2026.</p>
+      <p>DPrints by Dylan &copy; 2026. For concerns, contact your Division Office.</p>
     </footer>
 
   </div>
