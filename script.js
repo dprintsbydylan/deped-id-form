@@ -158,22 +158,6 @@ function validateForm() {
     isValid = false;
   }
 
-  // Contact number — 11 digits (optional, validate only if filled)
-  const contactEl = document.getElementById('contactNumber');
-  if (contactEl.value.trim() && !/^\d{11}$/.test(contactEl.value.trim())) {
-    showError(document.getElementById('err-contactNumber'), 'Contact number must be exactly 11 digits.');
-    contactEl.classList.add('invalid');
-    isValid = false;
-  }
-
-  // Emergency contact number — 11 digits (optional, validate only if filled)
-  const emergencyContactEl = document.getElementById('emergencyContact');
-  if (emergencyContactEl.value.trim() && !/^\d{11}$/.test(emergencyContactEl.value.trim())) {
-    showError(document.getElementById('err-emergencyContact'), 'Contact number must be exactly 11 digits.');
-    emergencyContactEl.classList.add('invalid');
-    isValid = false;
-  }
-
   return isValid;
 }
 
@@ -189,16 +173,7 @@ REQUIRED_FIELDS.forEach(({ id }) => {
     el.classList.remove('invalid');
     el.classList.add('valid');
 
-    if (id === 'contactNumber' && !/^\d{11}$/.test(el.value.trim())) {
-      showError(errorEl, 'Contact number must be exactly 11 digits.');
-      el.classList.add('invalid');
-      el.classList.remove('valid');
-    }
-    if (id === 'emergencyContact' && !/^\d{11}$/.test(el.value.trim())) {
-      showError(errorEl, 'Contact number must be exactly 11 digits.');
-      el.classList.add('invalid');
-      el.classList.remove('valid');
-    }
+    if (id === 'contactNumber' || id === 'emergencyContact') return;
   });
 
   el.addEventListener('input', () => {
